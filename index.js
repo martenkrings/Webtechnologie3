@@ -15,6 +15,11 @@ mongoose.connect('mongodb://localhost/notflix');
 var filmResource = require("./resources/filmresource.js");
 app.use('/api/films', filmResource);
 
+//import user router
+var userResource = require("./resources/userresource.js");
+app.use("/api/users", userResource);
+
+
 app.listen(3000, function () {
     console.log('App listening on port 3000!');
 });
