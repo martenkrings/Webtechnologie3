@@ -2,12 +2,15 @@
  * The index class
  */
 var express = require('express');
-var app = express();
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
+var app = express();
 
 app.set('private-key', 'nobodyshouldknow');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 var dbinit = require('./dbinit');
 
