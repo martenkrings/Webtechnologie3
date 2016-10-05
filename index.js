@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
 
+//initialiseer de database en voer de gegevens van de films in.
+require('./dbinit');
 app.set('private-key', 'nobodyshouldknow');
 
 var dbinit = require('./dbinit');
