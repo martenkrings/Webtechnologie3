@@ -12,7 +12,7 @@ router.post('/', function (req, res) {
 
     //TODO here comes the code that checks if the provided credentails are correct!
 
-    var token = jwt.sign({username: req.body.username}.req.app.get('private-key'), {
+    var token = jwt.sign({username: req.body.username},req.app.get('private-key'), {
         expiresIn: 1440
     });
 
