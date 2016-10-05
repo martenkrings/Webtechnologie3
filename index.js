@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
 
+app.set('private-key', 'nobodyshouldknow');
+
 var dbinit = require('./dbinit');
 
 mongoose.connect('mongodb://localhost/notflix');
@@ -18,6 +20,10 @@ app.use('/api/films', filmResource);
 //import user router
 var userResource = require("./resources/userresource.js");
 app.use("/api/users", userResource);
+
+//import autentication router
+var authenticationResource = require("./resources/authenticationresource.js");
+app.use("/api/authenticate", authenticationResource);
 
 
 app.listen(3000, function () {
