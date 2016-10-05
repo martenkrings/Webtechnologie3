@@ -2,9 +2,14 @@
  * Created by Marten on 10/5/2016.
  */
 var Film = require('./model/film.js');
+var User = require('./model/user.js');
 
 Film.remove({}, function(err) {
-    console.log('collection removed')
+    console.log('films removed')
+});
+
+User.remove({}, function(err) {
+   console.log('users removed')
 });
 
 var f1 = Film({

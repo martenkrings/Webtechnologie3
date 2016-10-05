@@ -28,4 +28,33 @@ router.get("/:id", function (req, res) {
     })
 });
 
+router.post("/", function (req, res) {
+    var token = req.header('authorization');
+    jwt.verify(token, req.app.get('private-key')), function (err, decoded) {
+        if (err) {
+            req.status(401).json({error: 'invalide autentication'});
+        } else {
+            console.log(decoded.username);
+            res.sendStatus(201);
+
+            var newUser = User({name: {
+                first: req.body.name.first,
+                insertion: req.body.name.insertion,
+                last:req.body.name.last} ,
+                username: req.body.username,
+                password: req.body.password});
+
+            newUser.save(function (err, result) {
+                if (err) {
+                    res.status(400).json({'error': err.message});
+                    return
+                }
+
+                res.status(201).json({'postid': result._id});
+            });
+
+        }
+    }
+});
+
 module.exports = router;
