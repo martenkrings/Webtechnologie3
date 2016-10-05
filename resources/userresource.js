@@ -11,10 +11,9 @@ var User = require("../model/user.js");
  */
 router.get("/:id", function (req, res) {
     var token = req.header("authorization");
-    console.log(token);
-    jwt.verify(token, req.app.get('private-key'), function(err, decoded) {
+    jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
         if (err) {
-            req.status(401).json({error: 'invalide autentication'});
+            res.status(401).json({error: 'invalide authentication'});
         } else {
             var id = decoded.id;
             User.find(id, function (err, user) {
@@ -28,7 +27,7 @@ router.get("/:id", function (req, res) {
     })
 });
 
-router.post("/", function (req, res) {
+router.post("/adduser", function (req, res) {
     var token = req.header('authorization');
     jwt.verify(token, req.app.get('private-key')), function (err, decoded) {
         if (err) {
@@ -55,6 +54,23 @@ router.post("/", function (req, res) {
 
         }
     }
+});
+
+router.get("/", function (req, res) {
+    var token = req.header("authorization");
+    jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
+        if (err) {
+            res.status(401).json({error: "invalide authentication"});
+        } else {
+            User.find().exec(function (err, users) {
+                if (err) {
+                    res.status(500).json({error: "Could not load users from database"});
+                } else {
+                    res.status(200).json(users);
+                }
+            })
+        }
+    });
 });
 
 module.exports = router;
