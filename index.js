@@ -14,8 +14,6 @@ app.set('private-key', 'nobodyshouldknow');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-var dbinit = require('./dbinit');
-
 mongoose.connect('mongodb://localhost/notflix');
 
 //import film router
