@@ -11,9 +11,11 @@ var app = express();
 require('./dbinit');
 app.set('private-key', 'nobodyshouldknow');
 
+//configure the bodyparser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+//connect database
 mongoose.connect('mongodb://localhost/notflix');
 
 //import film router
@@ -28,7 +30,7 @@ app.use("/api/users", userResource);
 var authenticationResource = require("./resources/authenticationresource.js");
 app.use("/api/authenticate", authenticationResource);
 
-
+//listen to port 3000
 app.listen(3000, function () {
     console.log('App listening on port 3000!');
 });
