@@ -7,20 +7,22 @@ var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
 
-app.set('private-key', 'nobodyshouldknow');
+mongoose.connect('mongodb://localhost/notflix');
 
-//set up mongoose db connection
-mongoose.connect('mongodb://localhost/chat');
+//import film router
+var filmResource = require("./resources/filmresource.js");
+app.use('/api/films', filmResource);
 
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json);
+app.listen(3000, function () {
+    console.log('App listening on port 3000!');
+});
 
-//import chat router
-var chatResource = require("./resources/chatresource.js");
-app.use('/api/chats', chatResource);
-
-var authenticationresource = require("./resources/authenticationresource.js");
-app.use("/api/authenticate", authenticationresource);
+/**
+ * standard get to ensure setup went OK
+ */
+app.get('/', function (req, res) {
+    res.send('Hello World!');
+});
 
 /**
  var db = {
@@ -67,14 +69,3 @@ app.use("/api/authenticate", authenticationresource);
     ]
 };
  */
-
-app.listen(3000, function () {
-    console.log('App listening on port 3000!');
-});
-
-/**
- * standard get to ensure setup went OK
- */
-app.get('/', function (req, res) {
-    res.send('Hello World!');
-});
