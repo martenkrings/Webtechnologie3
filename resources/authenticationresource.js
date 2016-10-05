@@ -5,6 +5,9 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 
+/**
+ * Gives a token after checking user credentials
+ */
 router.post('/', function (req, res) {
     //get the given username from the body
     var username = req.body.username;

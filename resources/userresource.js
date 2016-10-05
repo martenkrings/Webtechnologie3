@@ -7,18 +7,22 @@ var jwt = require('jsonwebtoken');
 var User = require("../model/user.js");
 
 /**
- * Get a user by giving an id
+ * Get a user by giving an id, requires authorization
  */
 router.get("/:id", function (req, res) {
+    //check authorization
     var token = req.header("authorization");
     jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
         if (err) {
             res.status(401).json({error: 'invalide authentication'});
         } else {
-            var id = decoded.id;
+            //get the id parameter
+            var id = req.params.id;
+
+            //find the user with the matching id
             User.find(id, function (err, user) {
                 if (err) {
-                    req.status(500).json({'error': 'Could not load user from database. User might not exist!'});
+                    req.status(500).json({'error': 'Could not load user from database.'});
                 } else {
                     res.status(200).json(user);
                 }
@@ -37,12 +41,15 @@ router.post("/adduser", function (req, res) {
             console.log(decoded.username);
             res.sendStatus(201);
 
-            var newUser = User({name: {
-                first: req.body.name.first,
-                insertion: req.body.name.insertion,
-                last:req.body.name.last} ,
+            var newUser = User({
+                name: {
+                    first: req.body.name.first,
+                    insertion: req.body.name.insertion,
+                    last: req.body.name.last
+                },
                 username: req.body.username,
-                password: req.body.password});
+                password: req.body.password
+            });
 
             newUser.save(function (err, result) {
                 if (err) {
@@ -57,12 +64,17 @@ router.post("/adduser", function (req, res) {
     }
 });
 
+/**
+ * Get all users, requires authorization
+ */
 router.get("/", function (req, res) {
+    //check authorization
     var token = req.header("authorization");
     jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
         if (err) {
             res.status(401).json({error: "invalide authentication"});
         } else {
+            //find all users and send them
             User.find().exec(function (err, users) {
                 if (err) {
                     res.status(500).json({error: "Could not load users from database"});
