@@ -6,7 +6,6 @@ var router = express.Router();
 var jwt = require('jsonwebtoken');
 
 router.post('/', function (req, res) {
-    console.log(req.body);
     //get the given username from the body
     var username = req.body.username;
 

@@ -27,6 +27,7 @@ router.get("/:id", function (req, res) {
     })
 });
 
+//////////////////////////Waarom moet je ingelogt zijn om je te kunnen registreren???
 router.post("/adduser", function (req, res) {
     var token = req.header('authorization');
     jwt.verify(token, req.app.get('private-key')), function (err, decoded) {
