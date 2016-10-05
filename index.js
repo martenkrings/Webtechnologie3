@@ -7,6 +7,8 @@ var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
 var app = express();
 
+//initialiseer de database en voer de gegevens van de films in.
+require('./dbinit');
 app.set('private-key', 'nobodyshouldknow');
 
 app.use(bodyParser.json());
