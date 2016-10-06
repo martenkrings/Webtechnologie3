@@ -20,7 +20,7 @@ router.get("/:id", function (req, res) {
             var id = req.params.id;
 
             //find the user with the matching id
-            User.find(id, function (err, user) {
+            User.find({'_id': id }, function (err, user) {
                 if (err) {
                     req.status(500).json({'error': 'Could not load user from database.'});
                 } else {
