@@ -4,7 +4,7 @@
 var mongoose = require('mongoose');
 
 var ratingSchema = new mongoose.Schema({
-    userId: {type: Number, require: true},
+    userId: {type: String, require: true},
     ttNumber: {type: String, require: true},
     rating: {type: Number, min: 0.5, max: 5, require: true}
 });

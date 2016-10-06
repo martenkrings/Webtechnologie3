@@ -1,16 +1,21 @@
 /**
  * Created by Marten on 10/5/2016.
  */
+var Rating = require('./model/rating.js');
 var Film = require('./model/film.js');
 var User = require('./model/user.js');
 
 Film.remove({}, function(err) {
-    console.log('films removed')
+    console.log('old films removed')
 });
 
 User.remove({}, function(err) {
-   console.log('users removed')
+   console.log('old users removed')
 });
+
+Rating.remove({}, function (err) {
+    console.log("old ratings removed")
+})
 
 var f1 = Film({
     ttNumber: "tt03877808",
@@ -55,6 +60,58 @@ f3.save(function(err) {
     if (err) throw err;
 
     console.log('film3 created');
+});
+
+var u1 = User({
+    name: {
+        first: "Sander",
+        insertion: "",
+        last: "Groot Wesseldijk"
+    },
+    username: "heuker",
+    paswoord: "lol"
+});
+
+u1.save(function (err) {
+    if(err) throw err;
+
+    console.log("User Sander Created")
+});
+
+var r1 = Rating({
+    userId: u1._id,
+    ttNumber: f1.ttNumber,
+    rating: 4
+});
+
+r1.save(function (err) {
+    if (err) throw err;
+
+    console.log("Rating 1 made")
+});
+
+var r2 = Rating({
+    userId: u1._id,
+    ttNumber: f2.ttNumber,
+    rating: 5
+});
+
+r2.save(function (err) {
+    if(err) throw err;
+
+    console.log("Rating 2 made")
+});
+
+var r3 = Rating({
+    userId: u1._id,
+    ttNumber: f3.ttNumber,
+    rating: 2
+});
+
+r3.save(function (err) {
+    if (err) throw err;
+
+    console.log("Rating 3 made");
 });
 
 module.exports = this;

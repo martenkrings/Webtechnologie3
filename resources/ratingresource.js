@@ -2,7 +2,7 @@
  * Created by Sander on 6-10-2016.
  */
 var express = require('express');
-var router = express.router;
+var router = express.Router();
 var jwt = require('jsonwebtoken');
 var User = require('../model/user');
 var Film = require('../model/film.js');
