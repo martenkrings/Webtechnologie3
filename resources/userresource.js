@@ -64,7 +64,7 @@ router.get("/", function (req, res) {
             res.status(401).json({error: "invalide authentication"});
         } else {
             //find all users and send them
-            User.find().exec(function (err, users) {
+            User.find(function (err, users) {
                 if (err) {
                     res.status(500).json({error: "Could not load users from database"});
                 } else {
