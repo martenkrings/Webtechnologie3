@@ -31,8 +31,8 @@ var authenticationResource = require("./resources/authenticationresource.js");
 app.use("/api/authenticate", authenticationResource);
 
 //import rating router
-var ratingResource = require("./resources/ratingresource");
-app.use("api/ratings", ratingResource);
+var ratingResource = require("./resources/ratingresource.js");
+app.use("/api/ratings", ratingResource);
 
 //listen to port 3000
 app.listen(3000, function () {

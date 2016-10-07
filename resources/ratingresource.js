@@ -8,17 +8,33 @@ var User = require('../model/user');
 var Film = require('../model/film.js');
 var Rating = require('../model/rating');
 
-
-
 /**
- * post request to change a rating, get the new rating and film from the body
+ * Get request that gets all movies with their average rating
  */
-router.post("/change", function (req, res) {
+router.get("/", function (req, res) {
     //check authorization
     var token = req.header("authorization");
     jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
         if (err) {
-            res.status(401).json({error: "invalide authentication"})
+            res.status(401).json({error: "invalide authentication"});
+        } else {
+            var film;
+            Film.find(function (err, result) {
+                film = result;
+            })
+        }
+    })
+});
+
+/**
+ * post request to change a rating, get the new rating and film from the body
+ */
+router.put("/change", function (req, res) {
+    //check authorization
+    var token = req.header("authorization");
+    jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
+        if (err) {
+            res.status(401).json({error: "invalide authentication"});
         } else {
             //find the given film
             var filmFound;
@@ -29,26 +45,58 @@ router.post("/change", function (req, res) {
                     filmFound = film;
                 }
             });
-
             //find the user
             User.find({username: decoded.username}, function (err, user) {
                 if (err) {
                     res.status(400).json({'error': err.message});
                 } else {
                     //find the rating
-                    Rating.find({userid: user._id, ttNumber: filmFound.ttNumber}, function (req, rating) {
-
-                        //change the rating
-                        rating.setAttribute('rating', req.body.rating);
-                        //save the new rating
-                        rating.save(function (err, result) {
-                            if (err) {
-                                res.status(400).json({error: "Could not save new rating"});
-                            } else {
-                                res.status(201).json({result: "New rating saved"});
-                            }
-                        });
+                    Rating.find({userid: user._id, ttNumber: filmFound.ttNumber}, function (err, rating) {
+                        if (err) {
+                            res.status(400).json({error: "Could not find the rating in the database"})
+                        } else {
+                            //change the rating
+                            rating.setAttribute('rating', req.body.rating);
+                            //save the new rating
+                            rating.save(function (err) {
+                                if (err) {
+                                    res.status(400).json({error: "Could not save new rating"});
+                                } else {
+                                    res.status(201).json({result: "New rating saved"});
+                                }
+                            });
+                        }
                     });
+                }
+            });
+        }
+    });
+});
+
+/**
+ * Delete request to delete a rating, gets the movie ttNumber from the body
+ */
+router.delete('/delete', function (req, res) {
+    console.log("x");
+    //check authorization
+    var token = req.header("authorization");
+    jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
+        if (err) {
+            res.status(401).json({error: "invalide authentication"});
+        } else {
+            User.find({username: decoded.username}, function (err, user) {
+                if (err) {
+                    res.status(400).json({error: "Could not find user in the database"});
+                } else {
+                    Rating.find({userId: user._id, ttNumber: req.body.ttNumber}, function (err, rating) {
+                        Rating.remove({_id: rating._id}, function (err) {
+                            if (err) {
+                                res.status(422).json({error: "Could not delete rating"})
+                            } else {
+                                res.status(200).json({result: "Rating removed"})
+                            }
+                        })
+                    })
                 }
             });
         }

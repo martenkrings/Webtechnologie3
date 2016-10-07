@@ -15,7 +15,7 @@ User.remove({}, function(err) {
 
 Rating.remove({}, function (err) {
     console.log("old ratings removed")
-})
+});
 
 var f1 = Film({
     ttNumber: "tt03877808",
@@ -68,7 +68,7 @@ var u1 = User({
         insertion: "",
         last: "Groot Wesseldijk"
     },
-    username: "heuker",
+    username: "Sander",
     paswoord: "lol"
 });
 
