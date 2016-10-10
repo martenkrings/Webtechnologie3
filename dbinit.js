@@ -87,7 +87,7 @@ var r1 = Rating({
 r1.save(function (err) {
     if (err) throw err;
 
-    console.log("Rating 1 made")
+    console.log("Rating 1 made");
 });
 
 var r2 = Rating({

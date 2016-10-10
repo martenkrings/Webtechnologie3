@@ -41,7 +41,7 @@ router.get("/myRatings", function (req, res) {
                 if (userErr) {
                     res.status(400).json({error: "No such user found"})
                 } else {
-                    Film.find({userId: user._id}, function (err, result) {
+                    Rating.find({userId: user._id}, function (err, result) {
                         if (err) {
                             res.status(400).json({error: "error finding ratings"})
                         } else {
@@ -127,6 +127,17 @@ router.delete('/delete', function (req, res) {
                 }
             });
         }
+    });
+});
+
+router.get('/all', function(req, res){
+    console.log('films');
+    Rating.find({}).exec(function(err, films){
+        if (err) {
+            res.status(500).json({'error': 'Could not load films from database'});
+            return
+        }
+        res.status(200).json(films)
     });
 });
 

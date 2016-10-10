@@ -31,8 +31,10 @@ router.get("/:id", function (req, res) {
     })
 });
 
-//////////////////////////Waarom moet je ingelogt zijn om je te kunnen registreren???
-router.post("/adduser", function (req, res) {
+/**
+ * Register a new user, by adding it to the database using the information provided in the body of the request.
+ */
+router.post("/register", function (req, res) {
     var newUser = User({
         name: {
             first: req.body.firstname,
