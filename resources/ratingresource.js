@@ -28,6 +28,33 @@ router.get("/", function (req, res) {
 });
 
 /**
+ * Get request that gets all the users ratings
+ */
+router.get("/myRatings", function (req, res) {
+    //check authorization
+    var token = req.header("authorization");
+    jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
+        if (err) {
+            res.status(401).json({error: "invalide authentication"})
+        } else {
+            User.find({username: decoded.username}, function (userErr, user) {
+                if (userErr) {
+                    res.status(400).json({error: "No such user found"})
+                } else {
+                    Film.find({userId: user._id}, function (err, result) {
+                        if (err) {
+                            res.status(400).json({error: "error finding ratings"})
+                        } else {
+                            res.status(200).json(result);
+                        }
+                    })
+                }
+            })
+        }
+    })
+});
+
+/**
  * post request to change a rating, get the new rating and film from the body
  */
 router.put("/change", function (req, res) {
@@ -78,7 +105,6 @@ router.put("/change", function (req, res) {
  * Delete request to delete a rating, gets the movie ttNumber from the body
  */
 router.delete('/delete', function (req, res) {
-    console.log("x");
     //check authorization
     var token = req.header("authorization");
     jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
