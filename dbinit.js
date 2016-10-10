@@ -78,6 +78,22 @@ u1.save(function (err) {
     console.log("User Sander Created")
 });
 
+// var u2 = User({
+//     name: {
+//         first: "Marten",
+//         insertion: "raar",
+//         last: "Krings"
+//     },
+//     username: "Marten",
+//     paswoord: "paswoord"
+// });
+//
+// u2.save(function (err) {
+//     if(err) throw err;
+//
+//     console.log("User Marten Created")
+// });
+
 var r1 = Rating({
     userId: u1._id,
     ttNumber: f1.ttNumber,

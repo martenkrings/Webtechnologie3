@@ -63,7 +63,7 @@ describe("Rating", function () {
                 .set("authorization", token)
                 .send({"rating": 4})
                 .send({"title": "Men in Black"})
-                .expect(201)
+                .expect(200)
                 .end(function (err, res) {
                     done(err);
                 })
