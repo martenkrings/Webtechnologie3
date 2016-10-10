@@ -18,10 +18,11 @@ router.get("/", function (req, res) {
         if (err) {
             res.status(401).json({error: "invalide authentication"});
         } else {
-            var film;
+            var films;
             Film.find(function (err, result) {
-                film = result;
-            })
+                films = result;
+                console.log(films);
+            });
         }
     })
 });
