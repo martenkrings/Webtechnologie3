@@ -40,7 +40,7 @@ describe("Rating", function () {
                     done(err);
                 })
         })
-    })
+    });
 
     //test 3
     describe("MyRatings", function () {
@@ -49,6 +49,21 @@ describe("Rating", function () {
                 .get("/api/ratings/myRatings")
                 .set("authorization", token)
                 .expect(200)
+                .end(function (err, res) {
+                    done(err);
+                })
+        })
+    });
+
+    //test 4
+    describe("Change rating", function () {
+        it("should change a rating", function (done) {
+            server
+                .put("/api/ratings/change")
+                .set("authorization", token)
+                .send({"rating": 4})
+                .send({"title": "Men in Black"})
+                .expect(201)
                 .end(function (err, res) {
                     done(err);
                 })

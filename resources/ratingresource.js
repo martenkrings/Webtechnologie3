@@ -64,35 +64,23 @@ router.put("/change", function (req, res) {
         if (err) {
             res.status(401).json({error: "invalide authentication"});
         } else {
-            //find the given film
-            var filmFound;
-            Film.find({title: req.body.title}, function (err, film) {
-                if (err) {
-                    res.status(400).json({error: "No such film found"})
-                } else {
-                    filmFound = film;
-                }
-            });
             //find the user
-            User.find({username: decoded.username}, function (err, user) {
+            console.log(decoded.username);
+            User.findOne({username: decoded.username}, function (err, user) {
                 if (err) {
                     res.status(400).json({'error': err.message});
                 } else {
-                    //find the rating
-                    Rating.find({userid: user._id, ttNumber: filmFound.ttNumber}, function (err, rating) {
+
+                    console.log(user);
+                    console.log(user._id);
+                    Rating.update({
+                        userId: user._id,
+                        ttNumber: req.body.ttNumber
+                    }, { '$set': {rating: req.body.rating}}, function (err) {
                         if (err) {
-                            res.status(400).json({error: "Could not find the rating in the database"})
+                            res.status(400).json({'error': err.message});
                         } else {
-                            //change the rating
-                            rating.setAttribute('rating', req.body.rating);
-                            //save the new rating
-                            rating.save(function (err) {
-                                if (err) {
-                                    res.status(400).json({error: "Could not save new rating"});
-                                } else {
-                                    res.status(201).json({result: "New rating saved"});
-                                }
-                            });
+                            res.status(200).send("OK");
                         }
                     });
                 }
@@ -130,9 +118,9 @@ router.delete('/delete', function (req, res) {
     });
 });
 
-router.get('/all', function(req, res){
+router.get('/all', function (req, res) {
     console.log('films');
-    Rating.find({}).exec(function(err, films){
+    Rating.find({}).exec(function (err, films) {
         if (err) {
             res.status(500).json({'error': 'Could not load films from database'});
             return
