@@ -8,45 +8,6 @@ var User = require('../model/user');
 var Film = require('../model/film.js');
 var Rating = require('../model/rating');
 
-var result = [];
-var filmsProgressed = 0;
-
-// var myCallBack = function (err, data, numberOfFilms, res) {
-//     if (err) throw err;
-//     result.push(data);
-//     filmsProgressed++;
-//     if (filmsProgressed == numberOfFilms) {
-//         //send the result
-//         console.log("RESULT = " + result);
-//         res.contentType('application/json');
-//         res.status(200).send(JSON.stringify(result));
-//     }
-// };
-//
-// var calculate = function (callback, i, filmProgressed, numberOfFilms, res) {
-//     Rating.find({ttNumber: filmProgressed.ttNumber}, function (err, ratings) {
-//         if (err) {
-//             res.status(400).json({error: "Could not find ratings"})
-//         } else {
-//             //calculate the average
-//             var average = 0;
-//
-//             for (var j = 0; j < ratings.length; j++) {
-//                 average = average + ratings[j].rating;
-//             }
-//
-//             average = average / j;
-//             console.log("average: " + average);
-//
-//             var filmWithAverage = {film: filmProgressed, averageRating: average};
-//             console.log("filmWithAverage: " + filmWithAverage);
-//             // result[i] = filmWithAverage;
-//             console.log(result[i]);
-//             callback(null, filmWithAverage, numberOfFilms, res);
-//         }
-//     });
-// };
-
 /**
  * Get request that gets all movies with their average rating
  */
@@ -57,44 +18,54 @@ router.get("/", function (req, res) {
         if (err) {
             res.status(401).json({error: "invalide authentication"});
         } else {
+
             //find all films
             Film.find({}).exec(function (err, filmResult) {
                 if (err) {
                     res.status(400).json({error: "Could not find films in databse"})
                 } else {
+                    var result = [];
+                    var filmsProgressed = 0;
                     var numberOfFilms = filmResult.length;
 
-                    var myCallBack = function (err, data, numberOfFilms, res) {
+                    //callback function so we are sure this code is executed last
+                    var myCallBack = function (err, data) {
                         if (err) throw err;
+
+                        //add data to result
                         result.push(data);
+
+                        //number of fils progressed + 1
                         filmsProgressed++;
+
+                        //if we have had all films than send the collected data
                         if (filmsProgressed == numberOfFilms) {
                             //send the result
-                            console.log("RESULT = " + result);
                             res.contentType('application/json');
                             res.status(200).send(JSON.stringify(result));
                         }
                     };
 
-                    var calculate = function (callback, i, filmProgressed, numberOfFilms, res) {
-                        Rating.find({ttNumber: filmProgressed.ttNumber}, function (err, ratings) {
+                    //function that puts together a film and its average rating, calls a callback
+                    var calculate = function (callback, i) {
+                        Rating.find({ttNumber: filmResult[i].ttNumber}, function (err, ratings) {
                             if (err) {
                                 res.status(400).json({error: "Could not find ratings"})
                             } else {
-                                //calculate the average
                                 var average = 0;
 
+                                //get the total rating
                                 for (var j = 0; j < ratings.length; j++) {
                                     average = average + ratings[j].rating;
                                 }
 
+                                //calculate the average
                                 average = average / j;
-                                console.log("average: " + average);
 
-                                var filmWithAverage = {film: filmProgressed, averageRating: average};
-                                console.log("filmWithAverage: " + filmWithAverage);
-                                // result[i] = filmWithAverage;
-                                console.log(result[i]);
+                                //put together film and average
+                                var filmWithAverage = {film: filmResult[i], averageRating: average};
+
+                                //send data to callback
                                 callback(null, filmWithAverage, numberOfFilms, res);
                             }
                         });
@@ -102,7 +73,8 @@ router.get("/", function (req, res) {
 
                     console.log("axafaf");
                     for (var i = 0; i < numberOfFilms; i++) {
-                        calculate(myCallBack, i, filmResult[i], numberOfFilms, res);
+                        //start a function with a callback, als gives i for reliability
+                        calculate(myCallBack, i);
                     }
                 }
             })
@@ -110,33 +82,6 @@ router.get("/", function (req, res) {
         }
     });
 });
-
-// function getGemiddeldeRating(callback, film, foundTtNumber) {
-//     Rating.find({ttNumber: foundTtNumber}, function (err, ratings) {
-//         if (err) {
-//             res.status(400).json({error: "Could not find ratings"})
-//         } else {
-//             //calculate the average
-//             var average = 0;
-//             var numberOfRatings = 0;
-//
-//             for (var j = 0; j < ratings.length; j++) {
-//                 average = average + ratings[j].rating;
-//             }
-//
-//             average = average / j;
-//             console.log("average: " +
-//                 "" + average);
-//             console.log("film: " + film);
-//
-//             var filmWithAverage = {film: film, averageRating: average};
-//             // var filmWithAverage = {ttNumber: film.ttNumber, title: film.title, date: film.date, length: film.length, director: film.director, description: film.description, averageRating: average};
-//             console.log("filmWithAverage: " + filmWithAverage);
-//             callback();
-//             return filmWithAverage;
-//         }
-//     });
-// }
 
 /**
  * Get request that gets all the users ratings
