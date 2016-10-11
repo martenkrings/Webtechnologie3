@@ -19,6 +19,7 @@ describe("Rating", function () {
             server
                 .post("/api/authenticate")
                 .send({"username": "Sander"})
+                .send({"password": "lol"})
                 .expect("Content-type", /json/)
                 .expect(201)
                 .end(function (err, res) {
@@ -64,6 +65,20 @@ describe("Rating", function () {
                 .send({"rating": 4})
                 .send({"title": "Men in Black"})
                 .expect(200)
+                .end(function (err, res) {
+                    done(err);
+                })
+        })
+    })
+
+    //test 5
+    describe("Get all films with average rating", function () {
+        it("should get all films with their average rating", function (done) {
+            server
+                .get("/api/ratings")
+                .set("authorization", token)
+                .expect(200)
+                .expect("Content-type", /json/)
                 .end(function (err, res) {
                     done(err);
                 })

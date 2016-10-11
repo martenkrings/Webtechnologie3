@@ -71,7 +71,6 @@ router.get("/", function (req, res) {
                         });
                     };
 
-                    console.log("axafaf");
                     for (var i = 0; i < numberOfFilms; i++) {
                         //start a function with a callback, als gives i for reliability
                         calculate(myCallBack, i);
