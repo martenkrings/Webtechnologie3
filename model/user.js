@@ -9,7 +9,7 @@ var userSchema = new mongoose.Schema({
         insertion: {type: String, required: false},
         last: {type: String, required: true}
     },
-    username: {type: String, required: true, sparse :true},
+    username: {type: String, required: true, unique :true},
     password: {type: String, required: true}
 });
 
