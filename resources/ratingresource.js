@@ -111,6 +111,29 @@ router.get("/", function (req, res) {
     });
 });
 
+router.post('/addRating', function (req, res) {
+    var token = req.header("authorization");
+    jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
+        if (err) {
+            res.status(401).json({error: "Forbidden"})
+        } else if (req.body.rating > 5 || req.body.rating < 0.5) {
+            res.status(400).json({error: "Bad Request"});
+        } else {
+            User.findOne({username: decoded.username}, function (dbUserErr, user) {
+                if (dbUserErr) {
+                    res.status(400).json({error: "Bad Request"})
+                } else {
+                    var newRating = Rating({
+                        userId: user._id,
+                        ttNumber: req.body.ttNumber,
+                        rating: req.body.ttNumber
+                    })
+                }
+            })
+        }
+    });
+});
+
 // function getGemiddeldeRating(callback, film, foundTtNumber) {
 //     Rating.find({ttNumber: foundTtNumber}, function (err, ratings) {
 //         if (err) {
@@ -226,7 +249,7 @@ router.delete('/delete', function (req, res) {
 });
 
 router.get('/all', function (req, res) {
-    console.log('films');
+    console.log('ratings');
     Rating.find({}).exec(function (err, films) {
         if (err) {
             res.status(500).json({'error': 'Could not load films from database'});
