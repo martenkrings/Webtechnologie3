@@ -4,9 +4,9 @@
 var mongoose = require('mongoose');
 
 var ratingSchema = new mongoose.Schema({
-    userId: {type: String, require: true},
-    ttNumber: {type: String, require: true},
-    rating: {type: Number, min: 0.5, max: 5, require: true}
+    userId: {type: String, required: true},
+    ttNumber: {type: String, required: true},
+    rating: {type: Number, min: 0.5, max: 5, required: true}
 });
 
 module.exports = mongoose.model('Rating', ratingSchema);
