@@ -82,6 +82,37 @@ router.get("/", function (req, res) {
     });
 });
 
+router.post('/addRating', function (req, res) {
+    var token = req.header("authorization");
+    jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
+        if (err) {
+            res.status(401).json({error: "Forbidden"})
+        } else if (req.body.rating > 5 || req.body.rating < 0.5) {
+            res.status(400).json({error: "Bad Request"});
+        } else {
+            User.findOne({username: decoded.username}, function (dbUserErr, user) {
+                if (dbUserErr) {
+                    res.status(400).json({error: "Bad Request"})
+                } else {
+                    var newRating = Rating({
+                        userId: user._id,
+                        ttNumber: req.body.ttNumber,
+                        rating: req.body.ttNumber
+                    })
+
+                    newRating.save(function (err, result) {
+                        if (err) {
+                            res.status(400).json({'error': err.message});
+                            return
+                        }
+                        res.status(201).json();
+                    })
+                }
+            })
+        }
+    });
+});
+
 /**
  * Get request that gets all the users ratings
  */
