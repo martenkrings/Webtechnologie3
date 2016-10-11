@@ -22,7 +22,7 @@ router.post('/', function (req, res) {
                 var token = jwt.sign({username: req.body.username}, req.app.get('private-key'), {
                     expiresIn: 1440
                 });
-                res.status(200).json({token: token});
+                res.status(201).json({token: token});
             } else {
                 res.status(401).json({'error': 'Invalid Credentials'});
             }

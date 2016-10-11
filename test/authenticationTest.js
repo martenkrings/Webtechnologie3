@@ -12,6 +12,7 @@ describe('Authentication', function () {
         server
             .post("/api/authenticate")
             .send({"username": "Sander"})
+            .send({"password": "lol"})
             .expect("Content-type", /json/)
             .expect(201)
             .end(function (err, res) {
