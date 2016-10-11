@@ -4,7 +4,7 @@
 var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
-var User = require('../model/user');
+var User = require('../model/user.js');
 var Film = require('../model/film.js');
 var Rating = require('../model/rating');
 
@@ -77,7 +77,6 @@ router.get("/", function (req, res) {
                     }
                 }
             })
-
         }
     });
 });
@@ -86,6 +85,7 @@ router.post('/addRating', function (req, res) {
     var token = req.header("authorization");
     jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
         if (err) {
+            console.log(err);
             res.status(401).json({error: "Forbidden"})
         } else if (req.body.rating > 5 || req.body.rating < 0.5) {
             res.status(400).json({error: "Bad Request"});
@@ -141,7 +141,7 @@ router.get("/myRatings", function (req, res) {
 });
 
 /**
- * post request to change a rating, get the new rating and film from the body
+ * put request to change a rating, get the new rating and film from the body
  */
 router.put("/change", function (req, res) {
     //check authorization
@@ -200,8 +200,8 @@ router.delete('/delete', function (req, res) {
     });
 });
 
+//TODO: delete this
 router.get('/all', function (req, res) {
-    console.log('films');
     Rating.find({}).exec(function (err, films) {
         if (err) {
             res.status(500).json({'error': 'Could not load films from database'});

@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 //connect database
-mongoose.connect('mongodb://localhost/notflix');
+mongoose.connect('mongodb://localhost/notflix', {config: {autoIndex: false}});
 
 //import film router
 var filmResource = require("./resources/filmresource.js");
