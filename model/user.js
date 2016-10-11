@@ -5,12 +5,12 @@ var mongoose = require('mongoose');
 
 var userSchema = new mongoose.Schema({
     name: {
-        first: {type: String, require: true},
-        insertion: {type: String, require: false},
-        last: {type: String, require: true}
+        first: {type: String, required: true},
+        insertion: {type: String, required: false},
+        last: {type: String, required: true}
     },
-    username: {type: String, require: true, unique:true},
-    password: {type: String, require: true}
+    username: {type: String, required: true, unique:true},
+    password: {type: String, required: true}
 });
 
 module.exports = mongoose.model('User', userSchema);

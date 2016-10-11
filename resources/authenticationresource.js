@@ -4,6 +4,7 @@
 var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
+var User = require("../model/user.js");
 
 /**
  * Gives a token after checking user credentials
@@ -11,16 +12,22 @@ var jwt = require('jsonwebtoken');
 router.post('/', function (req, res) {
     //get the given username from the body
     var username = req.body.username;
+    var password = req.body.password;
 
-    //TODO here comes the code that checks if the provided credentails are correct!
-
-    var token = jwt.sign({username: req.body.username}, req.app.get('private-key'), {
-        expiresIn: 1440
+    User.findOne({'username': username }, function (err, user) {
+        if (err) {
+            res.status(500).json({'error': 'Could not load user from database.'});
+        } else {
+            if (user.password == password) {
+                var token = jwt.sign({username: req.body.username}, req.app.get('private-key'), {
+                    expiresIn: 1440
+                });
+                res.status(200).json({token: token});
+            } else {
+                res.status(401).json({'error': 'Invalid Credentials'});
+            }
+        }
     });
-
-    //send the token back
-    res.status(201).json({token: token});
-
 });
 
 module.exports = router;
