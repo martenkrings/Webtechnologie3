@@ -97,7 +97,7 @@ router.post('/addRating', function (req, res) {
                     var newRating = Rating({
                         userId: user._id,
                         ttNumber: req.body.ttNumber,
-                        rating: req.body.ttNumber
+                        rating: req.body.rating
                     })
 
                     newRating.save(function (err, result) {
