@@ -11,41 +11,41 @@ var Rating = require('../model/rating');
 var result = [];
 var filmsProgressed = 0;
 
-var myCallBack = function (err, data, numberOfFilms, res) {
-    if (err) throw err;
-    result.push(data);
-    filmsProgressed++;
-    if (filmsProgressed == numberOfFilms) {
-        //send the result
-        console.log("RESULT = " + result);
-        res.contentType('application/json');
-        res.status(200).send(JSON.stringify(result));
-    }
-};
-
-var calculate = function (callback, i, filmProgressed, numberOfFilms, res) {
-    Rating.find({ttNumber: filmProgressed.ttNumber}, function (err, ratings) {
-        if (err) {
-            res.status(400).json({error: "Could not find ratings"})
-        } else {
-            //calculate the average
-            var average = 0;
-
-            for (var j = 0; j < ratings.length; j++) {
-                average = average + ratings[j].rating;
-            }
-
-            average = average / j;
-            console.log("average: " + average);
-
-            var filmWithAverage = {film: filmProgressed, averageRating: average};
-            console.log("filmWithAverage: " + filmWithAverage);
-            // result[i] = filmWithAverage;
-            console.log(result[i]);
-            callback(null, filmWithAverage, numberOfFilms, res);
-        }
-    });
-};
+// var myCallBack = function (err, data, numberOfFilms, res) {
+//     if (err) throw err;
+//     result.push(data);
+//     filmsProgressed++;
+//     if (filmsProgressed == numberOfFilms) {
+//         //send the result
+//         console.log("RESULT = " + result);
+//         res.contentType('application/json');
+//         res.status(200).send(JSON.stringify(result));
+//     }
+// };
+//
+// var calculate = function (callback, i, filmProgressed, numberOfFilms, res) {
+//     Rating.find({ttNumber: filmProgressed.ttNumber}, function (err, ratings) {
+//         if (err) {
+//             res.status(400).json({error: "Could not find ratings"})
+//         } else {
+//             //calculate the average
+//             var average = 0;
+//
+//             for (var j = 0; j < ratings.length; j++) {
+//                 average = average + ratings[j].rating;
+//             }
+//
+//             average = average / j;
+//             console.log("average: " + average);
+//
+//             var filmWithAverage = {film: filmProgressed, averageRating: average};
+//             console.log("filmWithAverage: " + filmWithAverage);
+//             // result[i] = filmWithAverage;
+//             console.log(result[i]);
+//             callback(null, filmWithAverage, numberOfFilms, res);
+//         }
+//     });
+// };
 
 /**
  * Get request that gets all movies with their average rating
@@ -63,6 +63,42 @@ router.get("/", function (req, res) {
                     res.status(400).json({error: "Could not find films in databse"})
                 } else {
                     var numberOfFilms = filmResult.length;
+
+                    var myCallBack = function (err, data, numberOfFilms, res) {
+                        if (err) throw err;
+                        result.push(data);
+                        filmsProgressed++;
+                        if (filmsProgressed == numberOfFilms) {
+                            //send the result
+                            console.log("RESULT = " + result);
+                            res.contentType('application/json');
+                            res.status(200).send(JSON.stringify(result));
+                        }
+                    };
+
+                    var calculate = function (callback, i, filmProgressed, numberOfFilms, res) {
+                        Rating.find({ttNumber: filmProgressed.ttNumber}, function (err, ratings) {
+                            if (err) {
+                                res.status(400).json({error: "Could not find ratings"})
+                            } else {
+                                //calculate the average
+                                var average = 0;
+
+                                for (var j = 0; j < ratings.length; j++) {
+                                    average = average + ratings[j].rating;
+                                }
+
+                                average = average / j;
+                                console.log("average: " + average);
+
+                                var filmWithAverage = {film: filmProgressed, averageRating: average};
+                                console.log("filmWithAverage: " + filmWithAverage);
+                                // result[i] = filmWithAverage;
+                                console.log(result[i]);
+                                callback(null, filmWithAverage, numberOfFilms, res);
+                            }
+                        });
+                    };
 
                     console.log("axafaf");
                     for (var i = 0; i < numberOfFilms; i++) {

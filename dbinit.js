@@ -69,7 +69,7 @@ var u1 = User({
         last: "Groot Wesseldijk"
     },
     username: "Sander",
-    paswoord: "lol"
+    password: "lol"
 });
 
 u1.save(function (err) {
