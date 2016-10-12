@@ -70,7 +70,7 @@ router.get("/", function (req, res) {
             //find all users and send them
             User.find(function (err, users) {
                 if (err) {
-                    res.status(400).json({error: "Could not load users from database"});
+                    res.status(500).json({error: "Could not load users from database"});
                 } else {
                     res.status(200).json(users);
                 }
