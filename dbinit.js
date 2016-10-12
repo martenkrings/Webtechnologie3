@@ -1,5 +1,5 @@
 /**
- * Created by Marten on 10/5/2016.
+ * This initializes the database with a few movies
  */
 var Rating = require('./model/rating.js');
 var Film = require('./model/film.js');
@@ -7,14 +7,6 @@ var User = require('./model/user.js');
 
 Film.remove({}, function(err) {
     console.log('old films removed')
-});
-
-User.remove({}, function(err) {
-   console.log('old users removed')
-});
-
-Rating.remove({}, function (err) {
-    console.log("old ratings removed")
 });
 
 var f1 = Film({
