@@ -8,7 +8,7 @@ var should = require('should');
 var server = supertest.agent("http://localhost:3000");
 var token;
 
-describe("Rating", function () {
+describe("User", function () {
 
     //test 1
     describe("Register with insertion", function () {

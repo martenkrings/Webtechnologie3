@@ -81,11 +81,13 @@ router.get("/", function (req, res) {
     });
 });
 
+/**
+ * post request that makes a new rating, gets data from body
+ */
 router.post('/addRating', function (req, res) {
     var token = req.header("authorization");
     jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
         if (err) {
-            console.log(err);
             res.status(401).json({error: "Forbidden"})
         } else if (req.body.rating > 5 || req.body.rating < 0.5 || !(req.body.rating % .5) == 0) {
             res.status(400).json({error: "Bad Request"});
@@ -110,14 +112,14 @@ router.post('/addRating', function (req, res) {
                                     res.status(400).json({'error': err.message});
                                     return
                                 }
-                                res.status(201).json({'id': newRating._id});
+                                res.status(201).json({'id: ': newRating._id});
                             })
                         }
-                    });
+                    })
                 }
-            })
+            });
         }
-    });
+    })
 });
 
 /**
@@ -130,7 +132,7 @@ router.get("/myRatings", function (req, res) {
         if (err) {
             res.status(401).json({error: "invalide authentication"})
         } else {
-            User.find({username: decoded.username}, function (userErr, user) {
+            User.findOne({username: decoded.username}, function (userErr, user) {
                 if (userErr) {
                     res.status(400).json({error: "No such user found"})
                 } else {
@@ -188,19 +190,17 @@ router.delete('/delete', function (req, res) {
         if (err) {
             res.status(401).json({error: "invalide authentication"});
         } else {
-            User.find({username: decoded.username}, function (err, user) {
+            User.findOne({username: decoded.username}, function (err, user) {
                 if (err) {
                     res.status(400).json({error: "Could not find user in the database"});
                 } else {
-                    Rating.find({userId: user._id, ttNumber: req.body.ttNumber}, function (err, rating) {
-                        Rating.remove({_id: rating._id}, function (err) {
-                            if (err) {
-                                res.status(422).json({error: "Could not delete rating"})
-                            } else {
-                                res.status(200).json({result: "Rating removed"})
-                            }
-                        })
-                    })
+                    Rating.findOneAndRemove({userId: user._id, ttNumber: req.body.ttNumber}, function (err) {
+                        if (err) {
+                            res.status(400).json({error: "Could not find rating in database"})
+                        } else {
+                            res.status(200).json({result: "Rating removed"});
+                        }
+                    });
                 }
             });
         }
