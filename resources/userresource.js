@@ -20,9 +20,9 @@ router.get("/:id", function (req, res) {
             var id = req.params.id;
 
             //find the user with the matching id
-            User.find({'_id': id }, function (err, user) {
+            User.findOne({'_id': id }, function (err, user) {
                 if (err) {
-                    req.status(400).json({'error': 'Could not load user from database.'});
+                    res.status(400).json({'error': 'Could not load user from database.'});
                 } else {
                     res.status(200).json(user);
                 }

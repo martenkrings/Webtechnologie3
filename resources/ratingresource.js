@@ -102,7 +102,6 @@ router.post('/addRating', function (req, res) {
                 } else {
                     //search if a rating likes this already exists
                     Rating.find({userId: user._id, ttNumber: req.body.ttNumber}, function (dbRatingErr, ratings) {
-                        console.log(ratings);
                         //if a rating like this already exitsts send a 400
                         if (dbRatingErr || ratings.length > 0) {
                             res.status(400).json({error: "Bad Request"})

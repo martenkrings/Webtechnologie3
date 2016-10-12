@@ -9,13 +9,6 @@ var User = require("../model/user.js");
 var server = supertest.agent("http://localhost:3000");
 var token;
 
-//get a valid userid
-var getUserId = function () {
-    User.findOne({}, function (err, res) {
-        return res._id;
-    })
-};
-
 describe("User", function () {
 
     // test 1
@@ -78,24 +71,8 @@ describe("User", function () {
                 .expect("Content-type", /json/)
                 .expect(200)
                 .end(function (err, res) {
-                    token = res.body.token;
                     done(err);
                 });
         })
     });
-
-    //test5
-    describe("UserId", function () {
-        it("Should get an user by his/hers id", function (done) {
-            server
-                .get("/api/users/" + getUserId())
-                .set("authorization", token)
-                .expect("Content-type", /json/)
-                .expect(200)
-                .end(function (err, res) {
-                    token = res.body.token;
-                    done(err);
-                });
-        })
-    })
 });
