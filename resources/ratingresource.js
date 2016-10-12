@@ -94,19 +94,26 @@ router.post('/addRating', function (req, res) {
                 if (dbUserErr) {
                     res.status(400).json({error: "Bad Request"})
                 } else {
-                    var newRating = Rating({
-                        userId: user._id,
-                        ttNumber: req.body.ttNumber,
-                        rating: req.body.rating
-                    })
+                    Rating.find({userId: user._id, ttNumber: req.body.ttNumber}, function (dbRatingErr, ratings) {
+                        console.log(ratings);
+                        if (dbRatingErr || ratings.length > 0) {
+                            res.status(400).json({error: "Bad Request"})
+                        } else {
+                            var newRating = Rating({
+                                userId: user._id,
+                                ttNumber: req.body.ttNumber,
+                                rating: req.body.rating
+                            });
 
-                    newRating.save(function (err, result) {
-                        if (err) {
-                            res.status(400).json({'error': err.message});
-                            return
+                            newRating.save(function (err, result) {
+                                if (err) {
+                                    res.status(400).json({'error': err.message});
+                                    return
+                                }
+                                res.status(201).json({'id': newRating._id});
+                            })
                         }
-                        res.status(201).json({'id': newRating._id});
-                    })
+                    });
                 }
             })
         }
