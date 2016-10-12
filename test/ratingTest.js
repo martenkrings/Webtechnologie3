@@ -1,7 +1,4 @@
 /**
- * Created by Sander on 10-10-2016.
- */
-/**
  * A test for authentication
  */
 // var mocha = require('mocha');
@@ -69,7 +66,7 @@ describe("Rating", function () {
                     done(err);
                 })
         })
-    })
+    });
 
     //test 5
     describe("Get all films with average rating", function () {

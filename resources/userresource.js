@@ -45,8 +45,11 @@ router.post("/register", function (req, res) {
         password: req.body.password
     });
 
+    console.log(newUser);
+
     newUser.save(function (err, result) {
         if (err) {
+            console.log(err);
             res.status(400).json({'error': err.message});
             return
         }
