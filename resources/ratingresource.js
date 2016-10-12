@@ -87,7 +87,7 @@ router.post('/addRating', function (req, res) {
     jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
         if (err) {
             res.status(401).json({error: "Forbidden"})
-        } else if (req.body.rating > 5 || req.body.rating < 0.5) {
+        } else if (req.body.rating > 5 || req.body.rating < 0.5 || !(req.body.rating % .5) == 0) {
             res.status(400).json({error: "Bad Request"});
         } else {
             User.findOne({username: decoded.username}, function (dbUserErr, user) {
@@ -105,7 +105,7 @@ router.post('/addRating', function (req, res) {
                             res.status(400).json({'error': err.message});
                             return
                         }
-                        res.status(201).json();
+                        res.status(201).json({'id': newRating._id});
                     })
                 }
             })

@@ -13,4 +13,6 @@ var userSchema = new mongoose.Schema({
     password: {type: String, required: true}
 });
 
+userSchema.set('autoIndex', false);
+
 module.exports = mongoose.model('User', userSchema);

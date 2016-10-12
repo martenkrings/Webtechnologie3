@@ -50,7 +50,6 @@ router.post("/register", function (req, res) {
             res.status(400).json({'error': err.message});
             return
         }
-
         res.status(201).json({'userid': result._id});
     });
 });
