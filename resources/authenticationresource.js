@@ -16,7 +16,7 @@ router.post('/', function (req, res) {
 
     User.findOne({'username': username }, function (err, user) {
         if (err) {
-            res.status(500).json({'error': 'Could not load user from database.'});
+            res.status(401).json({'error': 'Could not load user from database.'});
         } else {
             if (user.password == password) {
                 var token = jwt.sign({username: req.body.username}, req.app.get('private-key'), {

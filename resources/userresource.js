@@ -22,7 +22,7 @@ router.get("/:id", function (req, res) {
             //find the user with the matching id
             User.find({'_id': id }, function (err, user) {
                 if (err) {
-                    req.status(500).json({'error': 'Could not load user from database.'});
+                    req.status(400).json({'error': 'Could not load user from database.'});
                 } else {
                     res.status(200).json(user);
                 }
@@ -70,7 +70,7 @@ router.get("/", function (req, res) {
             //find all users and send them
             User.find(function (err, users) {
                 if (err) {
-                    res.status(500).json({error: "Could not load users from database"});
+                    res.status(400).json({error: "Could not load users from database"});
                 } else {
                     res.status(200).json(users);
                 }
