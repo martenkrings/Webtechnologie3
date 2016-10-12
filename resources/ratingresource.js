@@ -85,28 +85,36 @@ router.get("/", function (req, res) {
  * post request that makes a new rating, gets data from body
  */
 router.post('/addRating', function (req, res) {
+    //check authorization
     var token = req.header("authorization");
     jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
         if (err) {
-            res.status(401).json({error: "Forbidden"})
+            res.status(401).json({error: "Forbidden"});
+            //check if a valid rating has been given
         } else if (req.body.rating > 5 || req.body.rating < 0.5 || !(req.body.rating % .5) == 0) {
             res.status(400).json({error: "Bad Request"});
+
         } else {
+            //find a user with the username of the logged in user
             User.findOne({username: decoded.username}, function (dbUserErr, user) {
                 if (dbUserErr) {
                     res.status(400).json({error: "Bad Request"})
                 } else {
+                    //search if a rating likes this already exists
                     Rating.find({userId: user._id, ttNumber: req.body.ttNumber}, function (dbRatingErr, ratings) {
                         console.log(ratings);
+                        //if a rating like this already exitsts send a 400
                         if (dbRatingErr || ratings.length > 0) {
                             res.status(400).json({error: "Bad Request"})
                         } else {
+                            //make a new rating
                             var newRating = Rating({
                                 userId: user._id,
                                 ttNumber: req.body.ttNumber,
                                 rating: req.body.rating
                             });
 
+                            //save the new rating to the database
                             newRating.save(function (err, result) {
                                 if (err) {
                                     res.status(400).json({'error': err.message});
@@ -132,14 +140,19 @@ router.get("/myRatings", function (req, res) {
         if (err) {
             res.status(401).json({error: "invalide authentication"})
         } else {
+
+            //find the logged in user
             User.findOne({username: decoded.username}, function (userErr, user) {
                 if (userErr) {
                     res.status(400).json({error: "No such user found"})
                 } else {
+
+                    //find all ratings from the logged in user
                     Rating.find({userId: user._id}, function (err, result) {
                         if (err) {
                             res.status(400).json({error: "error finding ratings"})
                         } else {
+                            //send the ratings
                             res.status(200).json(result);
                         }
                     })
@@ -158,12 +171,18 @@ router.put("/change", function (req, res) {
     jwt.verify(token, req.app.get('private-key'), function (err, decoded) {
         if (err) {
             res.status(401).json({error: "invalide authentication"});
+        //check if a valid rating has been given
+        } else if (req.body.rating > 5 || req.body.rating < 0.5 || !(req.body.rating % .5) == 0) {
+            res.status(400).json({error: "Bad Request"});
         } else {
+
             //find the user
             User.findOne({username: decoded.username}, function (err, user) {
                 if (err) {
                     res.status(400).json({'error': err.message});
                 } else {
+
+                    //update the rating withn the new data
                     Rating.update({
                         userId: user._id,
                         ttNumber: req.body.ttNumber
@@ -190,17 +209,23 @@ router.delete('/delete', function (req, res) {
         if (err) {
             res.status(401).json({error: "invalide authentication"});
         } else {
+
+            //find the logged in user
             User.findOne({username: decoded.username}, function (err, user) {
                 if (err) {
                     res.status(400).json({error: "Could not find user in the database"});
                 } else {
+
+                    //find the rating matching the data and remove it
                     Rating.findOneAndRemove({userId: user._id, ttNumber: req.body.ttNumber}, function (err) {
                         if (err) {
                             res.status(400).json({error: "Could not find rating in database"})
                         } else {
+                            //send: rating removed
                             res.status(200).json({result: "Rating removed"});
                         }
-                    });}
+                    });
+                }
             });
         }
     });

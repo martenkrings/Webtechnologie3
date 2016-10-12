@@ -35,6 +35,7 @@ router.get("/:id", function (req, res) {
  * Register a new user, by adding it to the database using the information provided in the body of the request.
  */
 router.post("/register", function (req, res) {
+    //make a new user with data from the body
     var newUser = User({
         name: {
             first: req.body.firstname,
@@ -45,11 +46,9 @@ router.post("/register", function (req, res) {
         password: req.body.password
     });
 
-    console.log(newUser);
-
+    //save newUser to database
     newUser.save(function (err, result) {
         if (err) {
-            console.log(err);
             res.status(400).json({'error': err.message});
             return
         }
@@ -67,6 +66,7 @@ router.get("/", function (req, res) {
         if (err) {
             res.status(401).json({error: "invalide authentication"});
         } else {
+
             //find all users and send them
             User.find(function (err, users) {
                 if (err) {
