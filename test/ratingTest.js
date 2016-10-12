@@ -80,5 +80,20 @@ describe("Rating", function () {
                     done(err);
                 })
         })
+    });
+
+    //test 6
+    describe("Delete a rating", function () {
+        it("should delete a rating", function (done) {
+            server
+                .delete("/api/ratings/delete")
+                .set("authorization", token)
+                .send({"ttNumber": "tt03877808"})
+                .expect(200)
+                .expect("Content-type", /json/)
+                .end(function (err, res) {
+                    done(err);
+                })
+        })
     })
 });
