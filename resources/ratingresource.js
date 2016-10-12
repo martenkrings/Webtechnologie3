@@ -200,21 +200,9 @@ router.delete('/delete', function (req, res) {
                         } else {
                             res.status(200).json({result: "Rating removed"});
                         }
-                    });
-                }
+                    });}
             });
         }
-    });
-});
-
-//TODO: delete this
-router.get('/all', function (req, res) {
-    Rating.find({}).exec(function (err, films) {
-        if (err) {
-            res.status(500).json({'error': 'Could not load films from database'});
-            return
-        }
-        res.status(200).json(films)
     });
 });
 
